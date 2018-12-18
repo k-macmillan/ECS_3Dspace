@@ -14,6 +14,12 @@ namespace Ships
         public float Value;
     }
 
+    public struct PlayerData : IComponentData
+    {
+        public int Faction;
+        // Kills? Damage? Not sure. Faction for sure.
+    }
+
     ///// <summary>
     ///// Sub ship weapon cooldown
     ///// </summary>

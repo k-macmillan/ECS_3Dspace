@@ -34,7 +34,7 @@ namespace Ships
 
         protected override void OnUpdate()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         // Start is called before the first frame update
