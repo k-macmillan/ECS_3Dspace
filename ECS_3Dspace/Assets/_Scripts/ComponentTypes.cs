@@ -20,6 +20,7 @@ namespace Ships
         // Kills? Damage? Not sure. Faction for sure.
     }
 
+
     ///// <summary>
     ///// Sub ship weapon cooldown
     ///// </summary>
@@ -44,7 +45,7 @@ namespace Ships
     public struct Thrust : IComponentData
     {
         /// <summary>
-        /// Range: [-1.0, 1.0]
+        /// Range: [-100.0, 100.0], Commander can boost
         /// </summary>
         public float Value;
     }
@@ -75,7 +76,6 @@ namespace Ships
         public const int green = 0;
         public const int red = 1;
     }
-
 }
 
 // TODO: Make commander ships

@@ -3,7 +3,6 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 namespace Ships
@@ -43,9 +42,9 @@ namespace Ships
             var entityManager = World.Active.GetOrCreateManager<EntityManager>();
 
             // Create some hardcoded ships for testing
-            GenerateEnemyTestShips(ref entityManager);
-            GenerateFriendlyTestShips(ref entityManager);
-            
+            TEST_GenerateRedShips(ref entityManager);
+            TEST_GenerateGreeShips(ref entityManager);
+
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -54,10 +53,11 @@ namespace Ships
             InitializeWithScene();
         }
 
+
         public static void InitializeWithScene()
         {
 
-            greenShips = GetLookFromPrototype("GreenShipPrototype");
+        greenShips = GetLookFromPrototype("GreenShipPrototype");
             redShips = GetLookFromPrototype("RedShipPrototype");
 
             //EnemySpawnSystem.SetupComponentData(World.Active.GetOrCreateManager<EntityManager>());
@@ -66,6 +66,8 @@ namespace Ships
 
             NewGame();
         }
+
+        
 
         private static void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
@@ -90,42 +92,42 @@ namespace Ships
 
 
 
-
-
-
-
-
-
-        private static void GenerateEnemyTestShips(ref EntityManager em)
+        /// <summary>
+        /// Generates some red ships for testing
+        /// </summary>
+        /// <param name="em">EntityManager</param>
+        private static void TEST_GenerateRedShips(ref EntityManager em)
         {
+            float3 forceVec = new float3( 0f, 0f, 0f );
+            quaternion direction = new quaternion(0f, 1f, 0f, 0f);  // Opposite of quaternion.identity
             // Ship 0
             Entity ship0 = em.CreateEntity(subShipArchetype);
             em.SetComponentData(ship0, new Position { Value = new float3(10.0f, 10.0f, 10.0f) });
-            em.SetComponentData(ship0, new Rotation { Value = quaternion.identity });
+            em.SetComponentData(ship0, new Rotation { Value = direction });
             em.SetComponentData(ship0, new Health { Value = 100 });
-            em.SetComponentData(ship0, new ForceVector { Value = 100 });
-            em.SetComponentData(ship0, new Thrust { Value = 100 });
-            em.SetComponentData(ship0, new Mass { Value = 100 });
-            em.SetComponentData(ship0, new PlayerData { Faction = Faction.red } );
+            em.SetComponentData(ship0, new ForceVector { Value = forceVec });
+            em.SetComponentData(ship0, new Thrust { Value = 1 });
+            em.SetComponentData(ship0, new Mass { Value = 1 });
+            em.SetComponentData(ship0, new PlayerData { Faction = Faction.red });
 
             // Ship 1
             Entity ship1 = em.CreateEntity(subShipArchetype);
             em.SetComponentData(ship1, new Position { Value = new float3(20.0f, 20.0f, 20.0f) });
-            em.SetComponentData(ship1, new Rotation { Value = quaternion.identity });
+            em.SetComponentData(ship1, new Rotation { Value = direction });
             em.SetComponentData(ship1, new Health { Value = 100 });
-            em.SetComponentData(ship1, new ForceVector { Value = 100 });
-            em.SetComponentData(ship1, new Thrust { Value = 100 });
-            em.SetComponentData(ship1, new Mass { Value = 100 });
+            em.SetComponentData(ship1, new ForceVector { Value = forceVec });
+            em.SetComponentData(ship1, new Thrust { Value = 1 });
+            em.SetComponentData(ship1, new Mass { Value = 1 });
             em.SetComponentData(ship1, new PlayerData { Faction = Faction.red });
 
             // Ship 2
             Entity ship2 = em.CreateEntity(subShipArchetype);
             em.SetComponentData(ship2, new Position { Value = new float3(30.0f, 30.0f, 30.0f) });
-            em.SetComponentData(ship2, new Rotation { Value = quaternion.identity });
+            em.SetComponentData(ship2, new Rotation { Value = direction });
             em.SetComponentData(ship2, new Health { Value = 100 });
-            em.SetComponentData(ship2, new ForceVector { Value = 100 });
-            em.SetComponentData(ship2, new Thrust { Value = 100 });
-            em.SetComponentData(ship2, new Mass { Value = 100 });
+            em.SetComponentData(ship2, new ForceVector { Value = forceVec });
+            em.SetComponentData(ship2, new Thrust { Value = 1 });
+            em.SetComponentData(ship2, new Mass { Value = 1 });
             em.SetComponentData(ship2, new PlayerData { Faction = Faction.red });
 
             // Add ship renderers
@@ -135,36 +137,42 @@ namespace Ships
         }
 
 
-        private static void GenerateFriendlyTestShips(ref EntityManager em)
+
+        /// <summary>
+        /// Generates some green ships for testing
+        /// </summary>
+        /// <param name="em">EntityManager</param>
+        private static void TEST_GenerateGreeShips(ref EntityManager em)
         {
+            float3 forceVec = new float3(0f, 0f, 0f);
             // Ship 0
             Entity ship0 = em.CreateEntity(subShipArchetype);
-            em.SetComponentData(ship0, new Position { Value = new float3(-10.0f, -10.0f, -10.0f) });
+            em.SetComponentData(ship0, new Position { Value = new float3(10.0f, 10.0f, -10.0f) });
             em.SetComponentData(ship0, new Rotation { Value = quaternion.identity });
             em.SetComponentData(ship0, new Health { Value = 100 });
-            em.SetComponentData(ship0, new ForceVector { Value = 100 });
-            em.SetComponentData(ship0, new Thrust { Value = 100 });
-            em.SetComponentData(ship0, new Mass { Value = 100 });
+            em.SetComponentData(ship0, new ForceVector { Value = forceVec });
+            em.SetComponentData(ship0, new Thrust { Value = 1 });
+            em.SetComponentData(ship0, new Mass { Value = 1 });
             em.SetComponentData(ship0, new PlayerData { Faction = Faction.green });
 
             // Ship 1
             Entity ship1 = em.CreateEntity(subShipArchetype);
-            em.SetComponentData(ship1, new Position { Value = new float3(-20.0f, -20.0f, -20.0f) });
+            em.SetComponentData(ship1, new Position { Value = new float3(20.0f, 20.0f, -20.0f) });
             em.SetComponentData(ship1, new Rotation { Value = quaternion.identity });
             em.SetComponentData(ship1, new Health { Value = 100 });
-            em.SetComponentData(ship1, new ForceVector { Value = 100 });
-            em.SetComponentData(ship1, new Thrust { Value = 100 });
-            em.SetComponentData(ship1, new Mass { Value = 100 });
+            em.SetComponentData(ship1, new ForceVector { Value = forceVec });
+            em.SetComponentData(ship1, new Thrust { Value = 1 });
+            em.SetComponentData(ship1, new Mass { Value = 1 });
             em.SetComponentData(ship1, new PlayerData { Faction = Faction.green });
 
             // Ship 2
             Entity ship2 = em.CreateEntity(subShipArchetype);
-            em.SetComponentData(ship2, new Position { Value = new float3(-30.0f, -30.0f, -30.0f) });
+            em.SetComponentData(ship2, new Position { Value = new float3(30.0f, 30.0f, -30.0f) });
             em.SetComponentData(ship2, new Rotation { Value = quaternion.identity });
             em.SetComponentData(ship2, new Health { Value = 100 });
-            em.SetComponentData(ship2, new ForceVector { Value = 100 });
-            em.SetComponentData(ship2, new Thrust { Value = 100 });
-            em.SetComponentData(ship2, new Mass { Value = 100 });
+            em.SetComponentData(ship2, new ForceVector { Value = forceVec });
+            em.SetComponentData(ship2, new Thrust { Value = 1 });
+            em.SetComponentData(ship2, new Mass { Value = 1 });
             em.SetComponentData(ship2, new PlayerData { Faction = Faction.green });
 
             // Add ship renderers
