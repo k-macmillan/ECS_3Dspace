@@ -45,8 +45,6 @@ namespace Ships
             // Create some hardcoded ships for testing
             GenerateEnemyTestShips(ref entityManager);
             GenerateFriendlyTestShips(ref entityManager);
-
-            Debug.Log("NewGame finished.");
             
         }
 
