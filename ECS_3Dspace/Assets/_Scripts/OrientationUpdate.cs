@@ -24,9 +24,14 @@ namespace Ships
             VelocityVector v;
             for (int i = 0; i < m_Data.Length; ++i)
             {
+                // Cannot apply Vector3.forward to a math.quaternion
                 q = m_Data.Orientation[i].Orientation;
+
+                // Cannot drop it in, have to assign it a float3 first
                 f = (q * Vector3.forward) * m_Data.Orientation[i].Thrust * dt;
+
                 v = new VelocityVector { Value = m_Data.Velocity[i].Value + f };
+                // Only update our velocity if we are under maximum speed
                 if (Common.Magnitude(v.Value) < Settings.MaxShipSpeed)
                 {
                     m_Data.Velocity[i] = v;

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace Ships
+﻿namespace Ships
 {
     public class Settings
     {
