@@ -38,8 +38,14 @@ namespace Ships
         public static void NewGame()
         {
             var entityManager = World.Active.GetOrCreateManager<EntityManager>();
-            Debug.Log("Spawning ships");
+            TEST_GenerateShips(ref entityManager);
 
+
+        }
+
+        public static void TEST_GenerateShips(ref EntityManager em)
+        {
+            Debug.Log("Spawning ships");
             // Create 1000 hardcoded ships for testing
             for (int i = 0; i < 10; ++i)
             {
@@ -47,20 +53,19 @@ namespace Ships
                 {
                     if (i % 2 == 0)
                     {
-                        TEST_GenerateShip(ref entityManager, new float3(j * 15f + 5f, i * 15f, -20f), true);
-                        TEST_GenerateShip(ref entityManager, new float3(j * 15f + 5f, i * 15f, 20f), false);
+                        GenerateShip(ref em, new float3(j * 15f + 5f, i * 15f, -20f), true);
+                        GenerateShip(ref em, new float3(j * 15f + 5f, i * 15f, 20f), false);
                     }
                     else
                     {
-                        TEST_GenerateShip(ref entityManager, new float3(j * 15f, i * 15f, -25f), true);
-                        TEST_GenerateShip(ref entityManager, new float3(j * 15f, i * 15f, 25f), false);
+                        GenerateShip(ref em, new float3(j * 15f, i * 15f, -25f), true);
+                        GenerateShip(ref em, new float3(j * 15f, i * 15f, 25f), false);
                     }
                 }
             }
-
         }
 
-        private static void TEST_GenerateShip(ref EntityManager em, float3 position, bool green = false)
+        private static void GenerateShip(ref EntityManager em, float3 position, bool green = false)
         {
             Entity ship = em.CreateEntity(subShipArchetype);
             em.SetComponentData(ship, new Position { Value = position });
