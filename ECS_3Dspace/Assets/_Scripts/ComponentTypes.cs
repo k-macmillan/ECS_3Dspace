@@ -1,25 +1,44 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 /// <summary>
 /// All ships share this namespace
 /// </summary>
 namespace Ships
 {
-    /// <summary>
-    /// Sub ship health
-    /// </summary>
+
+    /* Component Systems
+     * PositionUpdate: {Position, VelocityVector}
+     * PositionModify: {Orientation, Thrust}
+     * HealthUpdate: {Health, Faction}
+     * 
+     * Entity Archetypes
+     * Bullets: Position, VelocityVector
+     * SubShips: Position, VelocityVector, {Orientation, Thrust}, {Health, Faction}
+     */
+
+    public struct VelocityVector : IComponentData
+    {
+        public float3 Value;
+    }
+
+    public struct PositionModify : IComponentData
+    {
+        public quaternion Orientation;
+        public float Thrust;
+    }
+
+    public struct HealthUpdate : IComponentData
+    {
+        public int Health;
+        public int Faction;
+    }
+
     public struct Health : IComponentData
     {
-        public float Value;
+        public int Value;
     }
-
-    public struct PlayerData : IComponentData
-    {
-        public int Faction;
-        // Kills? Damage? Not sure. Faction for sure.
-    }
-
 
     ///// <summary>
     ///// Sub ship weapon cooldown
@@ -29,26 +48,6 @@ namespace Ships
     //    // May change if commander boosts a cohort. Not sure yet.
     //    public float Value;
     //}
-
-    /// <summary>
-    /// Sub ship mass
-    /// </summary>
-    public struct Mass : IComponentData
-    {
-        // May change if commander boosts a cohort. Not sure yet.
-        public float Value;
-    }
-
-    /// <summary>
-    /// Sub ship thrust
-    /// </summary>
-    public struct Thrust : IComponentData
-    {
-        /// <summary>
-        /// Range: [-100.0, 100.0], Commander can boost
-        /// </summary>
-        public float Value;
-    }
 
     /// <summary>
     /// Sub ship force and direction

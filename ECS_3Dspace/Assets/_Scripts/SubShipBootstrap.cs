@@ -29,21 +29,19 @@ namespace Ships
             subShipArchetype = entityManager.CreateArchetype(
                 // ComponentType.Create<CommanderShip.Commander>(),
                 ComponentType.Create<Position>(),
-                ComponentType.Create<Rotation>(),
-                ComponentType.Create<Health>(),
-                //ComponentType.Create<Cooldown>(),
-                ComponentType.Create<ForceVector>(),
-                ComponentType.Create<Thrust>(),
-                ComponentType.Create<Mass>(),
-                ComponentType.Create<PlayerData>());
+                ComponentType.Create<VelocityVector>(),
+                ComponentType.Create<PositionModify>(),
+                ComponentType.Create<HealthUpdate>()
+                );
         }
 
         public static void NewGame()
         {
             var entityManager = World.Active.GetOrCreateManager<EntityManager>();
+            Debug.Log("Spawning ships");
 
             // Create 1000 hardcoded ships for testing
-            for (int i = 1; i < 11; ++i)
+            for (int i = 0; i < 10; ++i)
             {
                 for (int j = 0; j < 50; ++j)
                 {
@@ -64,24 +62,21 @@ namespace Ships
 
         private static void TEST_GenerateShip(ref EntityManager em, float3 position, bool green = false)
         {
-            
             Entity ship = em.CreateEntity(subShipArchetype);
             em.SetComponentData(ship, new Position { Value = position });
-            em.SetComponentData(ship, new Health { Value = 100 });
-            em.SetComponentData(ship, new ForceVector { Value = new float3(0f, 0f, 0f) });
-            em.SetComponentData(ship, new Thrust { Value = 1 });
-            em.SetComponentData(ship, new Mass { Value = 1 });
+            em.SetComponentData(ship, new VelocityVector { Value = new float3(0f, 0f, 0f) });
             
+
             if (green)
             {
-                em.SetComponentData(ship, new Rotation { Value = new quaternion(0f, 0f, 0f, 1f) });
-                em.SetComponentData(ship, new PlayerData { Faction = Faction.green });
+                em.SetComponentData(ship, new PositionModify { Orientation = new quaternion(0f, 0f, 0f, 1f), Thrust = 0f });
+                em.SetComponentData(ship, new HealthUpdate { Health = 100, Faction = Faction.green });
                 em.AddSharedComponentData(ship, greenShips);
             }
             else
             {
-                em.SetComponentData(ship, new Rotation { Value = new quaternion(0f, 1f, 0f, 0f) });
-                em.SetComponentData(ship, new PlayerData { Faction = Faction.red });
+                em.SetComponentData(ship, new PositionModify { Orientation = new quaternion(0f, 1f, 0f, 0f), Thrust = 0f });
+                em.SetComponentData(ship, new HealthUpdate { Health = 100, Faction = Faction.red });
                 em.AddSharedComponentData(ship, redShips);
             }
 
