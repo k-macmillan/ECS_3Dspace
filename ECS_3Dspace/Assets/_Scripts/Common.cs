@@ -4,6 +4,8 @@ namespace Ships
 {
     public static class Common
     {
+        public static float3 zero;
+
         /// <summary>
         /// Finds and returns the squared magnitude of a given vector (float3)
         /// </summary>
