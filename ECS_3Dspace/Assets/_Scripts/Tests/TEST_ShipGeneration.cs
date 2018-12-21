@@ -7,6 +7,7 @@ namespace Ships
 
     public static class TEST_ShipGeneration
     {
+        static Entity ship;
         public static void TEST_GenerateIdleShips(ref EntityManager em)
         {
             Debug.Log("Spawning idle ships");
@@ -17,13 +18,13 @@ namespace Ships
                 {
                     if (i % 2 == 0)
                     {
-                        SubShip.GenerateShip(ref em, new float3(j * 15f + 5f, i * 15f, -20f), Faction.green, Common.zero);
-                        SubShip.GenerateShip(ref em, new float3(j * 15f + 5f, i * 15f, 20f), Faction.red, Common.zero);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f + 5f, i * 15f, -20f), Faction.green, Common.zero);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f + 5f, i * 15f, 20f), Faction.red, Common.zero);
                     }
                     else
                     {
-                        SubShip.GenerateShip(ref em, new float3(j * 15f, i * 15f, -25f), Faction.green, Common.zero);
-                        SubShip.GenerateShip(ref em, new float3(j * 15f, i * 15f, 25f), Faction.red, Common.zero);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f, i * 15f, -25f), Faction.green, Common.zero);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f, i * 15f, 25f), Faction.red, Common.zero);
                     }
                 }
             }
@@ -40,13 +41,13 @@ namespace Ships
                 {
                     if (i % 2 == 0)
                     {
-                        SubShip.GenerateShip(ref em, new float3(j * 15f + 5f, i * 15f, -20f), Faction.green, velocity);
-                        SubShip.GenerateShip(ref em, new float3(j * 15f + 5f, i * 15f, 20f), Faction.red, velocity);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f + 5f, i * 15f, -20f), Faction.green, velocity);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f + 5f, i * 15f, 20f), Faction.red, velocity);
                     }
                     else
                     {
-                        SubShip.GenerateShip(ref em, new float3(j * 15f, i * 15f, -25f), Faction.green, velocity);
-                        SubShip.GenerateShip(ref em, new float3(j * 15f, i * 15f, 25f), Faction.red, velocity);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f, i * 15f, -25f), Faction.green, velocity);
+                        SubShip.GenerateShip(ref ship, ref em, new float3(j * 15f, i * 15f, 25f), Faction.red, velocity);
                     }
                 }
             }

@@ -2,6 +2,7 @@
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Ships
 {
@@ -12,9 +13,9 @@ namespace Ships
         public static MeshInstanceRenderer greenShips;
         public static MeshInstanceRenderer redShips;
 
-        public static Entity GenerateShip(ref EntityManager em, float3 position, int faction, float3 velocity)
+        public static void GenerateShip(ref Entity ship, ref EntityManager em, float3 position, int faction, float3 velocity)
         {
-            Entity ship = em.CreateEntity(subShipArchetype);
+            ship = em.CreateEntity(subShipArchetype);
             em.SetComponentData(ship, new Position { Value = position });
             em.SetComponentData(ship, new VelocityVector { Value = velocity });
 
@@ -30,9 +31,10 @@ namespace Ships
                     em.SetComponentData(ship, new HealthUpdate { Health = 100, Faction = Faction.red });
                     em.AddSharedComponentData(ship, redShips);
                     break;
+                default:
+                    Debug.Log("INVALID FACTION SELECTED: " + faction);
+                    break;
             }
-
-            return ship;
         }
     }
 

@@ -45,13 +45,8 @@ namespace Ships
 
         public static void InitializeWithScene()
         {
-
             SubShip.greenShips = GetLookFromPrototype("GreenShipPrototype");
             SubShip.redShips = GetLookFromPrototype("RedShipPrototype");
-
-            //EnemySpawnSystem.SetupComponentData(World.Active.GetOrCreateManager<EntityManager>());
-
-            //World.Active.GetOrCreateManager<UpdatePlayerHUD>().SetupGameObjects();
 
             NewGame();
         }
