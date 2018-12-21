@@ -42,12 +42,26 @@ namespace Ships
 
         protected override void OnUpdate()
         {
-            camera.transform.position = Common.CockpitOffset(faction, em.GetComponentData<Position>(ship).Value);
+            UpdateLook();
+            UpdateOrientation();
+        }
 
+
+        private void UpdateLook()
+        {
             yaw += Settings.MouseLookSensitivity * Input.GetAxis("Mouse X");
             pitch -= Settings.MouseLookSensitivity * Input.GetAxis("Mouse Y");
-            Vector3 look_orientation = new Vector3(pitch, yaw, 1f);
-            camera.transform.eulerAngles = look_orientation;
+            camera.transform.eulerAngles = new Vector3(pitch, yaw, 0f);
+
+            Quaternion Q = em.GetComponentData<Rotation>(ship).Value;
+            Vector3 pos = em.GetComponentData<Position>(ship).Value;
+            camera.transform.position = Common.green_mag * math.cos(Common.green_theta) * Vector3.Normalize(Q * Vector3.forward) + pos;
+        }
+
+        private void UpdateOrientation()
+        {
+
+
             quaternion orientation = camera.transform.rotation;
 
             PositionModify pm = new PositionModify { Orientation = orientation, Thrust = thrust };

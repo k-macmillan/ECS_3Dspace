@@ -8,12 +8,12 @@ namespace Ships
         // Feel like I need a file of constants
 
         // Cockpit offsets:
-        const float gx = 0.0f;
-        const float gy = 1.0f;
-        const float gz = 3.0f;
-        const float rx = 0.0f;
-        const float ry = 1.0f;
-        const float rz = 4.0f;
+        public static float3 green = new float3(0f, 1f, 3f);
+        public static float3 red = new float3(0f, 1f, 4f);
+        public static float green_theta = math.atan2(green.y, green.z);
+        public static float red_theta = math.atan2(red.z, red.y);
+        public static float green_mag = Vector3.Magnitude(green);
+        public static float red_mag = Vector3.Magnitude(red);
 
         public static float3 zero;
 
@@ -48,13 +48,12 @@ namespace Ships
             switch (faction)
             {
                 case Faction.green:
-                    return new Vector3(center.x + gx, center.y + gy, center.z + gz);
+                    return green + center;
                 case Faction.red:
-                    return new Vector3(center.x + rx, center.y + ry, center.z + rz);
+                    return red + center;
                 default:
                     return new Vector3(center.x, center.y, center.z);
             }
-
         }
     }
 
