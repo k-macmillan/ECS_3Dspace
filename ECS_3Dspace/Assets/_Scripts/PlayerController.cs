@@ -8,14 +8,15 @@ namespace Ships
 
     public class PlayerController : ComponentSystem
     {
-        public float roll;
-        public float pitch;
-        public float yaw;
-        public float thrust;
+        public static float roll;
+        public static float pitch;
+        public static float yaw;
+        public static float thrust;
         public static Entity ship;
 
         private int faction;
         public static EntityManager em;
+        public static GameObject camera;
 
 
         // Start is called before the first frame update
@@ -33,12 +34,18 @@ namespace Ships
 
             // Assign camera
             // Technically it will correct almost immediately due to OnUpdate
-            GameObject.Find("Main Camera").gameObject.transform.position = Common.CockpitOffset(faction, Position);
+            camera = GameObject.Find("Main Camera").gameObject;
+            camera.transform.position = Common.CockpitOffset(faction, Position);
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         protected override void OnUpdate()
         {
-            GameObject.Find("Main Camera").gameObject.transform.position = Common.CockpitOffset(faction, em.GetComponentData<Position>(ship).Value);
+            camera.transform.position = Common.CockpitOffset(faction, em.GetComponentData<Position>(ship).Value);
+            yaw += Settings.MouseLookSensitivity * Input.GetAxis("Mouse X");
+            pitch -= Settings.MouseLookSensitivity * Input.GetAxis("Mouse Y");
+            Vector3 orientation = new Vector3(pitch, yaw, 0f);
+            camera.transform.eulerAngles = orientation;
         }
     }
 }
