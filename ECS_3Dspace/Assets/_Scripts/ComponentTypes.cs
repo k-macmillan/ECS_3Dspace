@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Rendering;
 
 /// <summary>
 /// All ships share this namespace
@@ -73,6 +74,11 @@ namespace Ships
     {
         public const int green = 0;
         public const int red = 1;
+    }
+
+    public struct Mesh : IComponentData
+    {
+        public MeshInstanceRenderer Value;
     }
 }
 

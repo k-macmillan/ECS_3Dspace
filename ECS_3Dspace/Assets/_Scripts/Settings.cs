@@ -3,7 +3,7 @@
     public class Settings
     {
         public const float MaxShipSpeed = 100f;
-        public const float MouseLookSensitivity = 2.0f;
+        public const float MouseLookSensitivity = 1.0f;
     }
 }
 

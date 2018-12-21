@@ -11,7 +11,7 @@ namespace Ships
         {
             public readonly int Length;
             public ComponentDataArray<VelocityVector> Velocity;
-            [ReadOnly] public ComponentDataArray<PositionModify> Orientation;
+            public ComponentDataArray<PositionModify> Orientation;
         }
 
         [Inject] private Data m_Data;

@@ -20,6 +20,7 @@ namespace Ships
             SubShip.subShipArchetype = em.CreateArchetype(
                 // ComponentType.Create<CommanderShip.Commander>(),
                 ComponentType.Create<Position>(),
+                ComponentType.Create<Rotation>(),
                 ComponentType.Create<VelocityVector>(),
                 ComponentType.Create<PositionModify>(),
                 ComponentType.Create<HealthUpdate>()
