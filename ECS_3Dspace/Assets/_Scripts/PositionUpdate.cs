@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace Ships
 {
+    // TODO: Should this utilize ComponentGroup instead of Data struct + Inject?
+    // https://github.com/Unity-Technologies/EntityComponentSystemSamples/blob/master/Documentation/reference/component_group.md
     public class PositionUpdate : ComponentSystem
     {
         public struct Data

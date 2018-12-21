@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
@@ -8,13 +9,15 @@ namespace Ships
 {
     public sealed class SubShipBootstrap
     {
+        public static EntityManager em;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Initialize()
         {
-            var entityManager = World.Active.GetOrCreateManager<EntityManager>();
+            em = World.Active.GetOrCreateManager<EntityManager>();
 
             // Create ship archetype
-            SubShip.subShipArchetype = entityManager.CreateArchetype(
+            SubShip.subShipArchetype = em.CreateArchetype(
                 // ComponentType.Create<CommanderShip.Commander>(),
                 ComponentType.Create<Position>(),
                 ComponentType.Create<VelocityVector>(),
@@ -25,11 +28,11 @@ namespace Ships
 
         public static void NewGame()
         {
-            var entityManager = World.Active.GetOrCreateManager<EntityManager>();
-            TEST_ShipGeneration.TEST_GenerateIdleShips(ref entityManager);
-            TEST_ShipGeneration.TEST_GenerateMovingShips(ref entityManager);
+            TEST_ShipGeneration.TEST_GenerateIdleShips(ref em);
+            TEST_ShipGeneration.TEST_GenerateMovingShips(ref em);
 
-
+            PlayerController player = new PlayerController();
+            player.Start(new float3(-10, -10, -50f), Faction.green);
         }
 
 
