@@ -9,9 +9,9 @@ namespace Ships
     public class PlayerController : ComponentSystem
     {
         public static float roll;
-        public static float pitch;
-        public static float yaw;
-        public static float thrust;
+        public static float pitch = 0;
+        public static float yaw = 0;
+        public static float thrust = 0f;
         public static Entity ship;
 
         private int faction;
@@ -37,13 +37,13 @@ namespace Ships
             camera = GameObject.Find("Main Camera").gameObject;
             camera.transform.position = Common.CockpitOffset(faction, Position);
             Cursor.lockState = CursorLockMode.Locked;
-            thrust = 10f;
         }
 
         protected override void OnUpdate()
         {
             UpdateLook();
             UpdateOrientation();
+            UpdateThrust();
         }
 
 
@@ -60,13 +60,29 @@ namespace Ships
 
         private void UpdateOrientation()
         {
-
+            
 
             quaternion orientation = camera.transform.rotation;
 
             PositionModify pm = new PositionModify { Orientation = orientation, Thrust = thrust };
             em.SetComponentData(ship, pm);
             em.SetComponentData(ship, new Rotation { Value = orientation });
+        }
+
+
+        private void UpdateThrust()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (thrust == 0f)
+                {
+                    thrust = 10f;
+                }
+                else
+                {
+                    thrust = 0f;
+                }
+            }
         }
     }
 }
