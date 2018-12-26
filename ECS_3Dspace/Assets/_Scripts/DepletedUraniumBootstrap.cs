@@ -1,23 +1,32 @@
 ﻿using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Ships
 {
-    public class DepletedUraniumBootstrap
+    public sealed class DepletedUraniumBootstrap
     {
         public static EntityManager em;
 
-        public void Initialize()
+        public static void Initialize(ref EntityManager entityManager)
         {
-            em = World.Active.GetOrCreateManager<EntityManager>();
+            em = entityManager;
 
-            // Create ship archetype
+            // Create projectile archetype
             DepletedUraniumProjectile.wepDepletedUranium = em.CreateArchetype(
                 // ComponentType.Create<CommanderShip.Commander>(),
                 ComponentType.Create<Position>(),
                 ComponentType.Create<VelocityVector>(),
-                ComponentType.Create<Faction>()
+                ComponentType.Create<PlayerFaction>()
                 );
+        }
+
+
+        public static void InitializeWithScene()
+        {
+            DepletedUraniumProjectile.greenDepletedUranium = Common.GetLookFromPrototype("GreenProjectilePrototype");
+            DepletedUraniumProjectile.redDepletedUranium = Common.GetLookFromPrototype("RedProjectilePrototype");
+            Debug.Log("Projectiles loaded");
         }
     }
 }

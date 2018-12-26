@@ -22,7 +22,7 @@ namespace Ships
         // Start is called before the first frame update
         public void Start(float3 Position, int Faction)
         {
-            em = SubShipBootstrap.em;
+            em = Bootstrap.em;
             faction = Faction;
             Initialize(Position);
         }
@@ -44,6 +44,7 @@ namespace Ships
             UpdateLook();
             UpdateOrientation();
             UpdateThrust();
+            UpdateWeapon();
         }
 
 
@@ -60,8 +61,6 @@ namespace Ships
 
         private void UpdateOrientation()
         {
-            
-
             quaternion orientation = camera.transform.rotation;
 
             PositionModify pm = new PositionModify { Orientation = orientation, Thrust = thrust };
@@ -82,6 +81,15 @@ namespace Ships
                 {
                     thrust = 0f;
                 }
+            }
+        }
+
+        private void UpdateWeapon()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                Quaternion Q = em.GetComponentData<Rotation>(ship).Value;
+                DepletedUraniumProjectile.GenerateProjectile(ref em, em.GetComponentData<Position>(ship).Value, faction, Q * Vector3.forward * Settings.ProjectileDepletedUraniumSpeed);
             }
         }
     }

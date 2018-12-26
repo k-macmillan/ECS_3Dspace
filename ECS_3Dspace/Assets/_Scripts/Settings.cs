@@ -4,6 +4,7 @@
     {
         public const float MaxShipSpeed = 100f;
         public const float MouseLookSensitivity = 1.0f;
+        public const float ProjectileDepletedUraniumSpeed = 300.0f;
     }
 }
 

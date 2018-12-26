@@ -13,9 +13,9 @@ namespace Ships
         public static MeshInstanceRenderer greenDepletedUranium;
         public static MeshInstanceRenderer redDepletedUranium;
 
-        public static void GeneratProjectile(ref Entity projectile, ref EntityManager em, float3 position, int faction, float3 velocity)
+        public static void GenerateProjectile(ref EntityManager em, float3 position, int faction, float3 velocity)
         {
-            projectile = em.CreateEntity(wepDepletedUranium);
+            Entity projectile = em.CreateEntity(wepDepletedUranium);
             em.SetComponentData(projectile, new Position { Value = position });
             em.SetComponentData(projectile, new VelocityVector { Value = velocity });
 

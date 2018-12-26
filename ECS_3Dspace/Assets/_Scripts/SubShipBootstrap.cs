@@ -1,8 +1,5 @@
 ﻿using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Transforms;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Ships
@@ -11,10 +8,10 @@ namespace Ships
     {
         public static EntityManager em;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void Initialize()
+        //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        public static void Initialize(ref EntityManager entityManager)
         {
-            em = World.Active.GetOrCreateManager<EntityManager>();
+            em = entityManager;
 
             // Create ship archetype
             SubShip.subShipArchetype = em.CreateArchetype(
@@ -27,29 +24,10 @@ namespace Ships
                 );
         }
 
-        public static void NewGame()
-        {
-            TEST_ShipGeneration.TEST_GenerateIdleShips(ref em);
-            TEST_ShipGeneration.TEST_GenerateMovingShips(ref em);
-
-            PlayerController player = new PlayerController();
-            player.Start(new float3(-10, -10, -50f), Faction.green);
-        }
-
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        public static void InitializeAfterSceneLoad()
-        {
-            InitializeWithScene();
-        }
-
-
         public static void InitializeWithScene()
         {
-            SubShip.greenShips = GetLookFromPrototype("GreenShipPrototype");
-            SubShip.redShips = GetLookFromPrototype("RedShipPrototype");
-
-            NewGame();
+            SubShip.greenShips = Common.GetLookFromPrototype("GreenShipPrototype");
+            SubShip.redShips = Common.GetLookFromPrototype("RedShipPrototype");
         }
 
 
@@ -59,18 +37,7 @@ namespace Ships
             InitializeWithScene();
         }
 
-        /// <summary>
-        /// Returns the mesh for the given string
-        /// </summary>
-        /// <param name="protoName">Component name</param>
-        /// <returns></returns>
-        private static MeshInstanceRenderer GetLookFromPrototype(string protoName)
-        {
-            var proto = GameObject.Find(protoName);
-            var result = proto.GetComponent<MeshInstanceRendererComponent>().Value;
-            Object.Destroy(proto);
-            return result;
-        }
+
     }
 
 }
