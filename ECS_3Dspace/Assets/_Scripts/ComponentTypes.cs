@@ -76,6 +76,11 @@ namespace Ships
         public const int red = 1;
     }
 
+    public struct PlayerFaction : IComponentData
+    {
+        public int Value;
+    }
+
     public struct Mesh : IComponentData
     {
         public MeshInstanceRenderer Value;
