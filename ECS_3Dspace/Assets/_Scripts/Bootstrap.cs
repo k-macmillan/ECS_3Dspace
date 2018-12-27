@@ -35,6 +35,7 @@ namespace Ships
 
             PlayerController player = new PlayerController();
             player.Start(new float3(-10, -10, -50f), Faction.green);
+            DepletedUraniumProjectile.GenerateProjectile(ref em, new float3(-10f, -10f, 0f), Faction.red, new float3(0f, 0f, 0f));
         }
     }
 }

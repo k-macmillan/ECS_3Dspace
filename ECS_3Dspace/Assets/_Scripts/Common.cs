@@ -1,4 +1,6 @@
-﻿using Unity.Mathematics;
+﻿using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Mathematics;
 using Unity.Rendering;
 using UnityEngine;
 
@@ -17,6 +19,8 @@ namespace Ships
         public static float red_mag = Vector3.Magnitude(red);
 
         public static float3 zero;
+
+        public static Queue<float3> markedForDelete = new Queue<float3>();
 
         /// <summary>
         /// Finds and returns the squared magnitude of a given vector (float3)
@@ -68,6 +72,18 @@ namespace Ships
             var result = proto.GetComponent<MeshInstanceRendererComponent>().Value;
             Object.Destroy(proto);
             return result;
+        }
+
+
+        public static float DistanceSquared(float3 a, float3 b)
+        {
+            return (b.z - a.z) * (b.z - a.z) + (b.y - a.y) * (b.y - a.y) + (b.x - a.x) * (b.x - a.x);
+        }
+
+        public static bool SameFloat3(float3 a, float3 b)
+        {
+            // Intended for when the floats are literally the same (came from a Position)
+            return b.z == a.z && b.y == a.y && b.x == a.x;
         }
     }
 
