@@ -20,7 +20,7 @@ namespace Ships
 
         public static float3 zero;
 
-        public static Queue<float3> markedForDelete = new Queue<float3>();
+        public static HashSet<float3> markedForDelete = new HashSet<float3>();
 
         /// <summary>
         /// Finds and returns the squared magnitude of a given vector (float3)

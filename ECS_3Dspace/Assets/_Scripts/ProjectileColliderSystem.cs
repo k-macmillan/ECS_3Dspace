@@ -2,6 +2,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Ships
 {
@@ -31,48 +32,74 @@ namespace Ships
         [Inject] private ShipsComponents m_Ships;
 
         private static readonly float radius = (Settings.ProjectileRadius + Settings.SubShipRadius) * (Settings.ProjectileRadius + Settings.SubShipRadius);
-
+        private static bool marked = false;
 
         protected override void OnUpdate()
         {
             for (int i = 0; i < m_Projectiles.Length; ++i)
             {
-                for (int j = 0; j < m_Ships.Length; ++j)
+                // Ensure projectiles that are far away are removed
+                if (!OutOfBoundsProjectiles(i))
                 {
-                    // Ensure it's not the player ship!
-                    // TODO: Not include the player ship in this grouping...
-                    if (!Common.SameFloat3(m_Ships.Position[j].Value, PlayerController.em.GetComponentData<Position>(PlayerController.ship).Value))
+                    for (int j = 0; j < m_Ships.Length; ++j)
                     {
-                        if (Common.DistanceSquared(m_Projectiles.Position[i].Value, m_Ships.Position[j].Value) <= radius)
+                        // Ensure it's not the player ship!
+                        // TODO: Not include the player ship in this grouping...
+                        if (!Common.SameFloat3(m_Ships.Position[j].Value, PlayerController.em.GetComponentData<Position>(PlayerController.ship).Value))
                         {
-                            Common.markedForDelete.Enqueue(m_Projectiles.Position[i].Value);
-
-                            int health = m_Ships.Health[j].Health - Settings.ProjectileDamage;
-                            if (health > 0)
+                            if (Common.DistanceSquared(m_Projectiles.Position[i].Value, m_Ships.Position[j].Value) <= radius)
                             {
-                                HealthUpdate healthUpdate = new HealthUpdate { Health = health, Faction = m_Ships.Health[j].Faction };
-                                m_Ships.Health[j] = healthUpdate;
-                            }
-                            else
-                            {
-                                Common.markedForDelete.Enqueue(m_Ships.Position[j].Value);
-                                m_Ships.Velocity[j] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
+                                UpdateShipHealth(i, j);
                             }
                         }
                     }
-                }
-                // Ensure projectiles that are far away are removed
-                if (Common.DistanceSquared(m_Projectiles.Position[i].Value, Common.zero) > 900000f)
-                {
-                    Common.markedForDelete.Enqueue(m_Projectiles.Position[i].Value);
-                }
+                }                
             }
-            while (Common.markedForDelete.Count > 0)
-            {
-                // Probably want to overload ClearProjectiles to take a queue or check each thing in the list
-                ProjectileHandler.ClearProjectile(Common.markedForDelete.Dequeue());
-            }
+            HandleMarked();
+        }
 
+        private void HandleMarked()
+        {
+            if (marked)
+            {
+                ProjectileHandler.ClearProjectiles();
+                marked = false;
+            }
+        }
+
+        private bool OutOfBoundsProjectiles(int index)
+        {
+            if (Common.DistanceSquared(m_Projectiles.Position[index].Value, Common.zero) > 900000f)
+            {
+                Common.markedForDelete.Add(m_Projectiles.Position[index].Value);
+                marked = true;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void UpdateShipHealth(int projectile, int ship)
+        {
+            if (Common.DistanceSquared(m_Projectiles.Position[projectile].Value, m_Ships.Position[ship].Value) <= radius)
+            {
+                int health = m_Ships.Health[ship].Health - Settings.ProjectileDamage;
+
+                if (health > 0)
+                {
+                    HealthUpdate healthUpdate = new HealthUpdate { Health = health, Faction = m_Ships.Health[ship].Faction };
+                    m_Ships.Health[ship] = healthUpdate;
+                }
+                else
+                {
+                    Common.markedForDelete.Add(m_Ships.Position[ship].Value);
+                    m_Ships.Velocity[ship] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
+                }
+                Common.markedForDelete.Add(m_Projectiles.Position[projectile].Value);
+                marked = true;
+            }
         }
     }
 
@@ -89,6 +116,19 @@ namespace Ships
             for (int i = 0; i < entities.Length; ++i)
             {
                 if (Common.SameFloat3(em.GetComponentData<Position>(entities[i]).Value, position))
+                {
+                    em.DestroyEntity(entities[i]);
+                }
+            }
+        }
+
+        public static void ClearProjectiles()
+        {
+            EntityManager em = World.Active.GetExistingManager<EntityManager>();
+            var entities = em.GetAllEntities();
+            for (int i = 0; i < entities.Length; ++i)
+            {
+                if (Common.markedForDelete.Contains(em.GetComponentData<Position>(entities[i]).Value))
                 {
                     em.DestroyEntity(entities[i]);
                 }
