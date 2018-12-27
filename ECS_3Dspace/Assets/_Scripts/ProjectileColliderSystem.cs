@@ -13,7 +13,7 @@ namespace Ships
     /// </summary>
     public class ProjectileColliderSystem : ComponentSystem
     {
-        public struct Data
+        public struct ProjectileComponents
         {
             public readonly int Length;
             [ReadOnly] public ComponentDataArray<Position> Position;
@@ -21,29 +21,57 @@ namespace Ships
             [ReadOnly] public ComponentDataArray<PlayerFaction> Collider;
         }
 
-        [Inject] private Data m_Data;
+        [Inject] private ProjectileComponents m_Projectiles;
 
-        private static readonly float radiusSqr = Settings.ProjectileRadius * Settings.ProjectileRadius;
+        public struct ShipsComponents
+        {
+            public readonly int Length;
+            [ReadOnly] public ComponentDataArray<Position> Position;
+            public ComponentDataArray<HealthUpdate> Health;
+            public ComponentDataArray<VelocityVector> Velocity;
+        }
+
+        [Inject] private ShipsComponents m_Ships;
+
+        private static readonly float radius = (Settings.ProjectileRadius + Settings.SubShipRadius) * (Settings.ProjectileRadius + Settings.SubShipRadius);
 
 
         protected override void OnUpdate()
         {
-            float dt = Time.deltaTime;
-            
-            for (int i = 0; i < m_Data.Length; ++i)
+            for (int i = 0; i < m_Projectiles.Length; ++i)
             {
-                for (int j = 0; j < m_Data.Length; ++j)
+                for (int j = 0; j < m_Ships.Length; ++j)
                 {
-                    if (Common.DistanceSquared(m_Data.Position[i].Value, m_Data.Position[j].Value) < radiusSqr)
+                    // Ensure it's not the player ship!
+                    // Better to not include the player ship in this grouping...
+                    if (!Common.SameFloat3(m_Ships.Position[j].Value, PlayerController.em.GetComponentData<Position>(PlayerController.ship).Value))
                     {
-                        if (i != j)
+                        if (Common.DistanceSquared(m_Projectiles.Position[i].Value, m_Ships.Position[j].Value) <= radius)
                         {
-                            Debug.Log("IMPACT DETECTED!");
-                            Common.markedForDelete.Enqueue(m_Data.Position[i].Value);
+                            Common.markedForDelete.Enqueue(m_Projectiles.Position[i].Value);
                             // Is this necessary? Negligible computation
-                            m_Data.Velocity[i] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
+                            m_Projectiles.Velocity[i] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
+
+                            int health = m_Ships.Health[j].Health - Settings.ProjectileDamage;
+                            if (health > 0)
+                            {
+                                HealthUpdate healthUpdate = new HealthUpdate { Health = health, Faction = m_Ships.Health[j].Faction };
+                                m_Ships.Health[j] = healthUpdate;
+                            }
+                            else
+                            {
+                                Common.markedForDelete.Enqueue(m_Ships.Position[j].Value);
+                                m_Ships.Velocity[j] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
+                            }
                         }
                     }
+                }
+                // Ensure projectiles that are far away are removed
+                if (Common.DistanceSquared(m_Projectiles.Position[i].Value, Common.zero) > 900000f)
+                {
+                    Common.markedForDelete.Enqueue(m_Projectiles.Position[i].Value);
+                    // Is this necessary? Negligible computation
+                    m_Projectiles.Velocity[i] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
                 }
             }       
             while (Common.markedForDelete.Count > 0)
@@ -65,10 +93,8 @@ namespace Ships
                 if (Common.SameFloat3(em.GetComponentData<Position>(entities[i]).Value, position))
                 {
                     em.DestroyEntity(entities[i]);
-                    Debug.Log("PROJECTILE CLEARED!");
                 }
             }
         }
-        
     }
 }
