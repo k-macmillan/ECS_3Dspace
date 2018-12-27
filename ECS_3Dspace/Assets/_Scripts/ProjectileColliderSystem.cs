@@ -1,10 +1,7 @@
-﻿// NOTE: Lets raycast the velocity vector and only check distance if there is an impact.
-
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Ships
 {
@@ -17,7 +14,7 @@ namespace Ships
         {
             public readonly int Length;
             [ReadOnly] public ComponentDataArray<Position> Position;
-            public ComponentDataArray<VelocityVector> Velocity;
+            [ReadOnly] public ComponentDataArray<VelocityVector> Velocity;
             [ReadOnly] public ComponentDataArray<PlayerFaction> Collider;
         }
 
@@ -43,14 +40,12 @@ namespace Ships
                 for (int j = 0; j < m_Ships.Length; ++j)
                 {
                     // Ensure it's not the player ship!
-                    // Better to not include the player ship in this grouping...
+                    // TODO: Not include the player ship in this grouping...
                     if (!Common.SameFloat3(m_Ships.Position[j].Value, PlayerController.em.GetComponentData<Position>(PlayerController.ship).Value))
                     {
                         if (Common.DistanceSquared(m_Projectiles.Position[i].Value, m_Ships.Position[j].Value) <= radius)
                         {
                             Common.markedForDelete.Enqueue(m_Projectiles.Position[i].Value);
-                            // Is this necessary? Negligible computation
-                            m_Projectiles.Velocity[i] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
 
                             int health = m_Ships.Health[j].Health - Settings.ProjectileDamage;
                             if (health > 0)
@@ -70,20 +65,23 @@ namespace Ships
                 if (Common.DistanceSquared(m_Projectiles.Position[i].Value, Common.zero) > 900000f)
                 {
                     Common.markedForDelete.Enqueue(m_Projectiles.Position[i].Value);
-                    // Is this necessary? Negligible computation
-                    m_Projectiles.Velocity[i] = new VelocityVector { Value = new float3(0f, 0f, 0f) };
                 }
-            }       
+            }
             while (Common.markedForDelete.Count > 0)
             {
+                // Probably want to overload ClearProjectiles to take a queue or check each thing in the list
                 ProjectileHandler.ClearProjectile(Common.markedForDelete.Dequeue());
             }
-            
+
         }
     }
 
     public static class ProjectileHandler
     {
+        /// <summary>
+        /// Destroys the entity at the given position (do NOT approximate position!)
+        /// </summary>
+        /// <param name="position">Location of entity</param>
         public static void ClearProjectile(float3 position)
         {
             EntityManager em = World.Active.GetExistingManager<EntityManager>();
