@@ -2,7 +2,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Ships
 {
@@ -34,6 +33,11 @@ namespace Ships
         private static readonly float radius = (Settings.ProjectileRadius + Settings.SubShipRadius) * (Settings.ProjectileRadius + Settings.SubShipRadius);
         private static bool marked = false;
 
+
+
+        /// <summary>
+        /// Checks for projectile collisions with ComponentSystem's OnUpdate
+        /// </summary>
         protected override void OnUpdate()
         {
             for (int i = 0; i < m_Projectiles.Length; ++i)
@@ -53,20 +57,18 @@ namespace Ships
                             }
                         }
                     }
-                }                
+                }
             }
-            HandleMarked();
+            ClearProjectiles();
         }
 
-        private void HandleMarked()
-        {
-            if (marked)
-            {
-                ProjectileHandler.ClearProjectiles();
-                marked = false;
-            }
-        }
 
+
+        /// <summary>
+        /// Checks projectile at the given index to see if it has left the playable area
+        /// </summary>
+        /// <param name="index">Index of projectile</param>
+        /// <returns>bool</returns>
         private bool OutOfBoundsProjectiles(int index)
         {
             if (Common.DistanceSquared(m_Projectiles.Position[index].Value, Common.zero) > 900000f)
@@ -81,6 +83,13 @@ namespace Ships
             }
         }
 
+
+
+        /// <summary>
+        /// Updates ship health if hit by a projectile
+        /// </summary>
+        /// <param name="projectile">Projectile index</param>
+        /// <param name="ship">Ship index</param>
         private void UpdateShipHealth(int projectile, int ship)
         {
             if (Common.DistanceSquared(m_Projectiles.Position[projectile].Value, m_Ships.Position[ship].Value) <= radius)
@@ -101,37 +110,27 @@ namespace Ships
                 marked = true;
             }
         }
-    }
 
-    public static class ProjectileHandler
-    {
+
+
         /// <summary>
         /// Destroys the entity at the given position (do NOT approximate position!)
         /// </summary>
-        /// <param name="position">Location of entity</param>
-        public static void ClearProjectile(float3 position)
+        private static void ClearProjectiles()
         {
-            EntityManager em = World.Active.GetExistingManager<EntityManager>();
-            var entities = em.GetAllEntities();
-            for (int i = 0; i < entities.Length; ++i)
+            if (marked)
             {
-                if (Common.SameFloat3(em.GetComponentData<Position>(entities[i]).Value, position))
+                EntityManager em = World.Active.GetExistingManager<EntityManager>();
+                var entities = em.GetAllEntities();
+                for (int i = 0; i < entities.Length; ++i)
                 {
-                    em.DestroyEntity(entities[i]);
+                    if (Common.markedForDelete.Contains(em.GetComponentData<Position>(entities[i]).Value))
+                    {
+                        Common.markedForDelete.Remove(em.GetComponentData<Position>(entities[i]).Value);
+                        em.DestroyEntity(entities[i]);
+                    }
                 }
-            }
-        }
-
-        public static void ClearProjectiles()
-        {
-            EntityManager em = World.Active.GetExistingManager<EntityManager>();
-            var entities = em.GetAllEntities();
-            for (int i = 0; i < entities.Length; ++i)
-            {
-                if (Common.markedForDelete.Contains(em.GetComponentData<Position>(entities[i]).Value))
-                {
-                    em.DestroyEntity(entities[i]);
-                }
+                marked = false;
             }
         }
     }
