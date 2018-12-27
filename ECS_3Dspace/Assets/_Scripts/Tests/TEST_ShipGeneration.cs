@@ -1,6 +1,5 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Ships
 {
@@ -10,7 +9,6 @@ namespace Ships
         static Entity ship;
         public static void TEST_GenerateIdleShips(ref EntityManager em)
         {
-            Debug.Log("Spawning idle ships");
             // Create 1000 hardcoded ships for testing
             for (int i = 0; i < 10; ++i)
             {
@@ -33,7 +31,6 @@ namespace Ships
         public static void TEST_GenerateMovingShips(ref EntityManager em)
         {
             float3 velocity = new float3(0f, 0f, 20f);
-            Debug.Log("Spawning moving ships");
             // Create 1000 hardcoded ships for testing
             for (int i = 0; i < 10; ++i)
             {

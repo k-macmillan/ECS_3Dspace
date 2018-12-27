@@ -26,7 +26,6 @@ namespace Ships
         {
             DepletedUraniumProjectile.greenDepletedUranium = Common.GetLookFromPrototype("GreenProjectilePrototype");
             DepletedUraniumProjectile.redDepletedUranium = Common.GetLookFromPrototype("RedProjectilePrototype");
-            Debug.Log("Projectiles loaded");
         }
     }
 }
