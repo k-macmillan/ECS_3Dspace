@@ -29,15 +29,14 @@ namespace Ships
         public float Thrust;
     }
 
-    public struct HealthUpdate : IComponentData
+    public struct Weapon : IComponentData
     {
-        public int Health;
-        public int Faction;
+        public float Value;
     }
 
     public struct Health : IComponentData
     {
-        public int Value;
+        public float Value;
     }
 
     ///// <summary>
@@ -77,6 +76,11 @@ namespace Ships
     }
 
     public struct PlayerFaction : IComponentData
+    {
+        public int Value;
+    }
+
+    public struct ShipFaction : IComponentData
     {
         public int Value;
     }

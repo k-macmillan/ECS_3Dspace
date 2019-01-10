@@ -24,7 +24,7 @@ namespace Ships
         {
             public readonly int Length;
             [ReadOnly] public ComponentDataArray<Position> Position;
-            public ComponentDataArray<HealthUpdate> Health;
+            public ComponentDataArray<Health> Health;
             public ComponentDataArray<VelocityVector> Velocity;
         }
 
@@ -71,7 +71,7 @@ namespace Ships
         /// <returns>bool</returns>
         private bool OutOfBoundsProjectiles(int index)
         {
-            if (Common.DistanceSquared(m_Projectiles.Position[index].Value, Common.zero) > 900000f)
+            if (Common.DistanceSquared(m_Projectiles.Position[index].Value, Common.zero) > Settings.ProjectileMaxDistance)
             {
                 Common.markedForDelete.Add(m_Projectiles.Position[index].Value);
                 marked = true;
@@ -94,12 +94,11 @@ namespace Ships
         {
             if (Common.DistanceSquared(m_Projectiles.Position[projectile].Value, m_Ships.Position[ship].Value) <= radius)
             {
-                int health = m_Ships.Health[ship].Health - Settings.ProjectileDamage;
+                float health = m_Ships.Health[ship].Value - (Settings.ProjectileDamage + CommanderShips.Settings.ProjectileDamageModifier);
 
                 if (health > 0)
                 {
-                    HealthUpdate healthUpdate = new HealthUpdate { Health = health, Faction = m_Ships.Health[ship].Faction };
-                    m_Ships.Health[ship] = healthUpdate;
+                    m_Ships.Health[ship] = new Health { Value = health };
                 }
                 else
                 {

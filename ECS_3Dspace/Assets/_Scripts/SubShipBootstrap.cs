@@ -20,7 +20,9 @@ namespace Ships
                 ComponentType.Create<Rotation>(),
                 ComponentType.Create<VelocityVector>(),
                 ComponentType.Create<PositionModify>(),
-                ComponentType.Create<HealthUpdate>()
+                ComponentType.Create<Health>(),
+                ComponentType.Create<Weapon>(),
+                ComponentType.Create<ShipFaction>()
                 );
         }
 
@@ -36,8 +38,5 @@ namespace Ships
         {
             InitializeWithScene();
         }
-
-
     }
-
 }

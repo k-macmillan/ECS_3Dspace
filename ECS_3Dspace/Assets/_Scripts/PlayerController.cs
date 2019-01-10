@@ -88,9 +88,14 @@ namespace Ships
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                Quaternion Q = em.GetComponentData<Rotation>(ship).Value;
-                DepletedUraniumProjectile.GenerateProjectile(ref em, em.GetComponentData<Position>(ship).Value, faction, Q * Vector3.forward * Settings.ProjectileDepletedUraniumSpeed);
-                AudioCommon.FireWeapon();
+                float cooldown = em.GetComponentData<Weapon>(ship).Value;
+                if (cooldown <= 0)
+                {
+                    em.SetComponentData(ship, new Weapon { Value = Settings.ProjectileCooldown});
+                    Quaternion Q = em.GetComponentData<Rotation>(ship).Value;
+                    DepletedUraniumProjectile.GenerateProjectile(ref em, em.GetComponentData<Position>(ship).Value, faction, Q * Vector3.forward * Settings.ProjectileDepletedUraniumSpeed);
+                    AudioCommon.FireWeapon();
+                }
             }
         }
     }
