@@ -86,7 +86,7 @@ namespace Ships
 
         private void UpdateWeapon()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKey(KeyCode.Mouse0))
             {
                 float cooldown = em.GetComponentData<Weapon>(ship).Value;
                 if (cooldown <= 0)
