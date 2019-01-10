@@ -34,7 +34,7 @@ namespace Ships
 
             // Assign camera
             // Technically it will correct almost immediately due to OnUpdate
-            camera = GameObject.Find("Main Camera").gameObject;
+            camera = GameObject.Find("PlayerCamera").gameObject;
             camera.transform.position = Common.CockpitOffset(faction, Position);
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -90,6 +90,7 @@ namespace Ships
             {
                 Quaternion Q = em.GetComponentData<Rotation>(ship).Value;
                 DepletedUraniumProjectile.GenerateProjectile(ref em, em.GetComponentData<Position>(ship).Value, faction, Q * Vector3.forward * Settings.ProjectileDepletedUraniumSpeed);
+                AudioCommon.FireWeapon();
             }
         }
     }
