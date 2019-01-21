@@ -69,21 +69,19 @@ namespace Ships
             PositionModify pm = new PositionModify { Orientation = orientation, Thrust = thrust };
             em.SetComponentData(ship, pm);
             em.SetComponentData(ship, new Rotation { Value = orientation });
+            PlayerData.Speed = Common.Magnitude(em.GetComponentData<VelocityVector>(ship).Value);
         }
 
 
         private void UpdateThrust()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
-                if (thrust == 0f)
-                {
-                    thrust = 10f;
-                }
-                else
-                {
-                    thrust = 0f;
-                }
+                thrust = 10f;
+            }
+            else
+            {
+                thrust = 0f;
             }
         }
 

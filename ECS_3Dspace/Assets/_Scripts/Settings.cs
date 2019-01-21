@@ -28,6 +28,12 @@ namespace Ships
 
         public static bool Paused = false;
     }
+
+    public static class PlayerData
+    {
+        public static int Health = 100;
+        public static float Speed = 0.0f;
+    }
 }
 
 namespace CommanderShips
