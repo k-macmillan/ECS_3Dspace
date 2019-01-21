@@ -25,6 +25,8 @@ namespace Ships
         public static int ScreenHeight = 1440;
         public static int DesiredFPS = 144;
         public static FullScreenMode ScreenMode = FullScreenMode.FullScreenWindow;
+
+        public static bool Paused = false;
     }
 }
 

@@ -41,10 +41,13 @@ namespace Ships
 
         protected override void OnUpdate()
         {
-            UpdateLook();
-            UpdateOrientation();
-            UpdateThrust();
-            UpdateWeapon();
+            if (!PlayerSettings.Paused)
+            {
+                UpdateLook();
+                UpdateOrientation();
+                UpdateThrust();
+                UpdateWeapon();
+            }
         }
 
 
