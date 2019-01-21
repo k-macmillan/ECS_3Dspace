@@ -29,12 +29,14 @@ namespace Ships {
             Time.timeScale = 1f;
             PlayerSettings.Paused = false;
             Cursor.visible = false;
+            HUDScript.Pause(false);
         }
 
         private void PauseGame()
         {
             Time.timeScale = 0f;
             PlayerSettings.Paused = true;
+            HUDScript.Pause(true);
         }
     }
 }
