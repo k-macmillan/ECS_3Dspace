@@ -14,8 +14,8 @@ namespace Space
         private const int N = 9;                    // Blocks per side
         private const int Chunks = 8;               // There are 8: 5x5x5 chunks
         private Block[] blocks;
-
-        public BlockSpace(float3 Lower, float3 Upper, NativeArray<Entity> Entities)
+        
+        public void SetBlockSpace(float3 Lower, float3 Upper, NativeArray<Entity> Entities)
         {
             float3 increment = new float3((Upper - Lower) / N);
             for (int i = 0; i < SpaceSize; ++i)
